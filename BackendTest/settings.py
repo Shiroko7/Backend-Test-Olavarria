@@ -55,7 +55,7 @@ ROOT_URLCONF = 'BackendTest.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,3 +122,4 @@ STATIC_URL = '/static/'
 
 # User
 AUTH_USER_MODEL = 'mealmngmt.User'
+LOGIN_REDIRECT_URL = '/mealmngmt/create-menu'
