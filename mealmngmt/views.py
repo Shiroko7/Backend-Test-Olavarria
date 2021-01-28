@@ -1,18 +1,20 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import MenuForm
-from .models import Menu, MealManager
+from .forms import CreateMenuForm, RequestMenuForm
+from .models import Menu, MealManager, MenuRequest
 import datetime
 
 
 @login_required
 def create_menu(request):
-
     if request.method == "POST":
-        form = MenuForm(request.POST)
+        form = CreateMenuForm(request.POST)
         if form.is_valid():
+            # form values
             message = form.cleaned_data['message']
-            date = datetime.date.today()
+            date = form.cleaned_data['date']
+
+            # session values
             mealmanager = MealManager.objects.get(user=request.user)
             menu = Menu.objects.create(
                 message=message,
@@ -25,21 +27,48 @@ def create_menu(request):
                 "form": form,
                 "uuid": menu.id,
                 "newlink": newlink,
-                "msg": "Link para compartir el menu."
+                "msg": "Link para compartir el menu.",
+                "post": True
             }
             return render(request, "mealmngmt/create_menu.html", context)
     else:
-        form = MenuForm()
+        form = CreateMenuForm()
         context = {
-            "form": form
+            "form": form,
+            "post": False
         }
         return render(request, "mealmngmt/create_menu.html", context)
 
 
 def view_menu(request, uuid):
+    form = RequestMenuForm()
     menu = Menu.objects.get(id=uuid)
     context = {
+        "form": form,
         "message": menu.message,
-        "date": menu.date
+        "date": menu.date,
+        "post": False,
     }
+    if request.method == "POST":
+        form = RequestMenuForm(request.POST)
+        if form.is_valid():
+            # form values
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            option = form.cleaned_data['option']
+            customization = form.cleaned_data['customization']
+
+            menurequest = MenuRequest.objects.create(
+                first_name=first_name,
+                last_name=last_name,
+                option=option,
+                customization=customization,
+                menu=menu
+            )
+            context = {
+                "form": form,
+                "msg": "Solicitud enviada.",
+                "post": True
+            }
+            return render(request, "mealmngmt/menu.html", context)
     return render(request, "mealmngmt/menu.html", context)

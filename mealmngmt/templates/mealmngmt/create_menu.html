@@ -11,8 +11,12 @@
       <button type="submit">Publicar</button>
     </form>
 
-    {{msg}}    
-    <a href = "{% url 'mealmngmt:menu' uuid %}">{{newlink}}</a>
+    {% if post  %}
+
+      {{msg}}    
+      <a href = "{% url 'mealmngmt:menu' uuid %}">{{newlink}}</a>
+      
+    {% endif %}
 </div>
 
 {% endblock content %}

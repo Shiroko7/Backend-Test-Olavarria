@@ -1,9 +1,21 @@
 {% extends "base.html" %} {% block content %}
 
 <div>
-	<h1>Menu del Día</h1>
+	<h1>Menu del Día {{date}}</h1>
 
 	{{ message }}
+
+	<form method="post" action".">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Solicitar</button>
+    </form>
+
+	{% if post  %}
+
+      {{msg}}    
+      
+    {% endif %}
 </div>
 
 {% endblock content %}

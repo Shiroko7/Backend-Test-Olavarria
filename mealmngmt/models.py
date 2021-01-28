@@ -11,12 +11,6 @@ class User(AbstractUser):
 class MealManager(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-
-class Employe(models.Model):
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
-    email = models.CharField(max_length=40)
-
 # Entities
 
 
@@ -28,8 +22,10 @@ class Menu(models.Model):
 
 
 class MenuRequest(models.Model):
-    option = models.CharField(max_length=40),
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    option = models.CharField(max_length=40)
     customization = models.CharField(max_length=140)
-    employe = models.ForeignKey(Employe, on_delete=models.CASCADE)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
 
 # xoxb-1683708563844-1690268597857-XS6OkIBmsqCkQ3qeWAQKvabr
