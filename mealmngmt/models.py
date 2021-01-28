@@ -10,9 +10,6 @@ class User(AbstractUser):
 class MealManager(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.user
-
 
 class Employe(models.Model):
     first_name = models.CharField(max_length=20)
