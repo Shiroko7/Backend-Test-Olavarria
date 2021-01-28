@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -20,6 +21,7 @@ class Employe(models.Model):
 
 
 class Menu(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     message = models.CharField(max_length=140)
     date = models.DateField()
     mealmanager = models.ForeignKey(MealManager, on_delete=models.CASCADE)
