@@ -10,6 +10,9 @@
       {{ form.as_p }}
       <button type="submit">Publicar</button>
     </form>
+
+    {{msg}}    
+    <a href = "{% url 'mealmngmt:menu' uuid %}">{{newlink}}</a>
 </div>
 
 {% endblock content %}
