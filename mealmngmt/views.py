@@ -4,6 +4,8 @@ from .forms import CreateMenuForm, RequestMenuForm
 from .models import Menu, MealManager, MenuRequest
 import datetime
 
+# Manager views
+
 
 @login_required
 def create_menu(request):
@@ -39,6 +41,28 @@ def create_menu(request):
         }
         return render(request, "mealmngmt/create_menu.html", context)
 
+
+@login_required
+def menu_list(request):
+    menus = Menu.objects.all()
+    context = {
+        "menus": menus
+    }
+    return render(request, "mealmngmt/menu_list.html", context)
+
+
+@login_required
+def menu_details(request, uuid):
+    menu = Menu.objects.get(id=uuid)
+    menurequests = MenuRequest.objects.filter(menu=menu)
+    context = {
+        "menu": menu,
+        "requests": menurequests,
+    }
+    return render(request, "mealmngmt/menu_details.html", context)
+
+
+# employes view
 
 def view_menu(request, uuid):
     form = RequestMenuForm()

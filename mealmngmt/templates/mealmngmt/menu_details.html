@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block content %}
+
+<div>
+	<h1>Menu del Día {{menu.date}}</h1>
+
+	{{menu.message}}
+
+	<h2>Lista de Pedidos</h2>
+
+	<ul>
+		{% for request in requests %}
+		<li>
+			{{request.first_name}} {{request.last_name}} {{request.option}}
+			{{request.customization}}
+		</li>
+		{% endfor %}
+	</ul>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block content %}
+
+<div>
+	<h1>Lista de Menus {{date}}</h1>
+
+	<ul>
+		{% for menu in menus %}
+		<li>{{menu.message}} {{menu.date}}</li>
+		<a href="{% url 'mealmngmt:menu-details' menu.id %}">Detalles</a>
+		{% endfor %}
+	</ul>
+</div>
+
+{% endblock content %}
