@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mealmngmt'
+    'mealmngmt.apps.MealmngmtConfig',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
@@ -106,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Chile/Continental'
 
 USE_I18N = True
 
@@ -123,3 +124,16 @@ STATIC_URL = '/static/'
 # User
 AUTH_USER_MODEL = 'mealmngmt.User'
 LOGIN_REDIRECT_URL = '/mealmngmt/create-menu'
+
+# Slack api
+SLACK_TOKEN = 'xoxb-1683708563844-1690268597857-XS6OkIBmsqCkQ3qeWAQKvabr'
+
+# scheduler tasks
+SCHEDULER_CONFIG = {
+    "apscheduler.jobstores.default": {
+        "class": "django_apscheduler.jobstores:DjangoJobStore"
+    },
+    'apscheduler.executors.processpool': {
+        "type": "threadpool"
+    },
+}

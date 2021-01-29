@@ -4,6 +4,7 @@ from .forms import CreateMenuForm, RequestMenuForm
 from .models import Menu, MealManager, MenuRequest
 import datetime
 
+
 # Manager views
 
 
