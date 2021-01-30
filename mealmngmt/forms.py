@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 
 
 class CreateMenuForm(forms.Form):
@@ -12,3 +13,9 @@ class RequestMenuForm(forms.Form):
     last_name = forms.CharField()
     option = forms.CharField(widget=forms.Textarea)
     customization = forms.CharField(widget=forms.Textarea)
+
+
+class SchedulerForm(forms.Form):
+    initial_time = forms.IntegerField(initial=settings.OPEN_HOUR)
+    final_time = forms.IntegerField(initial=settings.CLOSE_HOUR)
+    interval = forms.IntegerField(initial=60)

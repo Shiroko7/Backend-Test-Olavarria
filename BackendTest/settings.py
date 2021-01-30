@@ -137,3 +137,7 @@ SCHEDULER_CONFIG = {
         "type": "threadpool"
     },
 }
+
+# active hours
+OPEN_HOUR = 7
+CLOSE_HOUR = 11

@@ -5,10 +5,12 @@
 
 	{{ message }}
 
-	<form method="post" action".">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Solicitar</button>
+	<form method="post" action"." >
+      <fieldset {{enabled}}>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Solicitar</button>
+      </fieldset>
     </form>
 
 	{% if post  %}

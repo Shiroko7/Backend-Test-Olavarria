@@ -1,8 +1,15 @@
+import datetime
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import CreateMenuForm, RequestMenuForm
+from .forms import CreateMenuForm, RequestMenuForm, SchedulerForm
 from .models import Menu, MealManager, MenuRequest
-import datetime
+from django.conf import settings
+from scheduler.scheduler import scheduler, slack_reminder
+
+
+def view_home(request):
+    return render(request, 'mealmngmt/home.html')
 
 
 # Manager views
@@ -24,15 +31,29 @@ def create_menu(request):
                 date=date,
                 mealmanager=mealmanager
             )
-            newlink = "{0}menu/{1}/".format(
+            detaillink = "{0}menu_details/{1}/".format(
+                request.build_absolute_uri('/mealmngmt/'), menu.id)
+            sharelink = "{0}menu/{1}/".format(
                 request.build_absolute_uri('/mealmngmt/'), menu.id)
             context = {
                 "form": form,
                 "uuid": menu.id,
-                "newlink": newlink,
+                "sharelink": sharelink,
+                "detaillink": detaillink,
                 "msg": "Link para compartir el menu.",
                 "post": True
             }
+            url = "{0}menu/{1}/".format(
+                request.build_absolute_uri('/mealmngmt/'), menu.id)
+            scheduler.add_job(
+                slack_reminder,
+                args=[settings.OPEN_HOUR, settings.CLOSE_HOUR, url, menu.id],
+                trigger='interval',
+                minutes=1,
+                id="slack_reminder",
+                max_instances=1,
+                replace_existing=True,
+            )
             return render(request, "mealmngmt/create_menu.html", context)
     else:
         form = CreateMenuForm()
@@ -56,16 +77,46 @@ def menu_list(request):
 def menu_details(request, uuid):
     menu = Menu.objects.get(id=uuid)
     menurequests = MenuRequest.objects.filter(menu=menu)
+    form = SchedulerForm()
     context = {
         "menu": menu,
         "requests": menurequests,
+        "form": SchedulerForm,
     }
+    if request.method == "POST":
+        form = SchedulerForm(request.POST)
+        if form.is_valid():
+            context = {
+                "menu": menu,
+                "requests": menurequests,
+                "form": form,
+                "msg": "recordatorio actualizado"
+            }
+            url = "{0}menu/{1}/".format(
+                request.build_absolute_uri('/mealmngmt/'), uuid)
+            scheduler.add_job(
+                slack_reminder,
+                args=[form.cleaned_data['initial_time'],
+                      form.cleaned_data['final_time'], url, uuid],
+                trigger='interval',
+                minutes=form.cleaned_data['interval'],
+                id="slack_reminder",
+                max_instances=1,
+                replace_existing=True,
+            )
+            return render(request, "mealmngmt/menu_details.html", context)
     return render(request, "mealmngmt/menu_details.html", context)
 
 
 # employes view
 
 def view_menu(request, uuid):
+    # check if menu is avaible to choose from
+    now = datetime.datetime.now()
+    if settings.OPEN_HOUR <= now.hour < settings.CLOSE_HOUR:
+        enabled = "enabled"
+    else:
+        enabled = "disabled"
     form = RequestMenuForm()
     menu = Menu.objects.get(id=uuid)
     context = {
@@ -73,6 +124,7 @@ def view_menu(request, uuid):
         "message": menu.message,
         "date": menu.date,
         "post": False,
+        "enabled": enabled
     }
     if request.method == "POST":
         form = RequestMenuForm(request.POST)
