@@ -118,8 +118,19 @@ MainProject:
   - scheduler
     - scheduler.py
       - ```python
-           class MenuRequestView(generic.CreateView):
+            def slack_reminder(start=settings.OPEN_HOUR, end=settings.CLOSE_HOUR, url="beep boop", job_id="slack_reminder"):
           ```
+          start: Desde que hora se puede correr la tarea,
+          end: Hora en la que se termina de correr la tarea,
+          url: url del menú el cual se requiere recordar
+          job_id: identificador de la tarea, usado para terminarla en ejecución.
+
+          Esta función es la tarea recurrente que se corre dentro del scheduler. Su función es mandar mensajes asincronicamente a SLACK. Cuando detecta que el intervalo de tiempo no es valido esta al ejecutarse se elimina del scheduler.
+
+      - ```python
+           def start():
+          ```
+          Empieza el scheduler, llamado en apps.py.
   - templates/mealmngmt: templates html usados por las vistas de la aplicación mealmngmt. 
 
 - templates: templates generales usados de base/navbar y login.
