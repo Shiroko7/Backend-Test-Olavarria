@@ -118,6 +118,10 @@ MainProject:
   - scheduler
     - scheduler.py
       - ```python
+          async def post_message(message): 
+        ```
+        Su función es mandar mensajes asincronicamente a SLACK. 
+      - ```python
             def slack_reminder(start=settings.OPEN_HOUR, end=settings.CLOSE_HOUR, url="beep boop", job_id="slack_reminder"):
           ```
           start: Desde que hora se puede correr la tarea.
@@ -128,12 +132,18 @@ MainProject:
           
           job_id: identificador de la tarea, usado para terminarla en ejecución.
 
-          Esta función es la tarea recurrente que se corre dentro del scheduler. Su función es mandar mensajes asincronicamente a SLACK. Cuando detecta que el intervalo de tiempo no es valido esta al ejecutarse se elimina del scheduler.
+          Esta función es la tarea recurrente que se corre dentro del scheduler. Convoca la función post_message() cuando es llamada por el scheduler. Cuando detecta que el intervalo de tiempo no es valido, se libera su trabajo del scheduler.
 
       - ```python
            def start():
           ```
           Empieza el scheduler, llamado en apps.py.
+
+  - tests
+    - test_forms.py: Se prueban que las formas se comporten correctamente en el caso que sean validas y no lo sean.
+    - test_models.py: Se prueba que se adhieran correctamente los componentes a la base de datos.
+    - test_urls.py: Se prueban que esten correctamente utilizadas las rutas.
+    - test_views.py: Para cada modelo se prueba que la función get funcione y que devuelva el template correcto. Se prueba el correcto funcionar de los formularios froms en las vistas que lo usan.
   - templates/mealmngmt: templates html usados por las vistas de la aplicación mealmngmt. 
 
 - templates: templates generales usados de base/navbar y login.
