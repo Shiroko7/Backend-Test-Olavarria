@@ -80,19 +80,24 @@ MainProject:
     - ```python
          class Menu(models.Model):
         ```
+        Representación de un menú. Sus campos son message(str): menu del día, date(datetime): fecha del menú y mealmanager(class MealManager foreingkey): Usuario MealManager que lo crea.
     - ```python
          class MenuRequest(models.Model):
         ```
+       Representación de la solicitud de un menú del día. Sus campos son: first_name(str): Nombre de la persona, last_name(str): apellido de la persona, option(str): Elección personal, customization(str): Indicaciones personales sobre la solicitud, Menu (class Menu foreingkey) UIID del menú que se requiere el almuerzo.
   - forms.py
     - ```python
          class CreateMenuModelForm(forms.ModelForm):
         ```
+      ModelForm que toma los campos de message(str) y date(datetime) del usuario. El campo de MealManager se deduce del estado de la sesión en MenuCreateView.
     - ```python
          class CreateMenuRequestModelForm(forms.ModelForm):
         ```
+       ModelForm que toma los campos de first_name(str), last_name(str), option(srt), customization(str). El campo de menu (UUID) se obtiene de la URL del pedido en MenuRequestView.
     - ```python
          class SchedulerForm(forms.Form):
         ```
+      Form usado para obtener los datos en caso de querer modificar el recordatorio de SLACK. Sus campos son: initial_time (int) y final_time(int) el intervalo donde la tarea se corre periódicamente, interval (int): cada cuantos minutos se envia el recordatorio.
   - views.py
     - ```python
          class HomeView(generic.TemplateView):
