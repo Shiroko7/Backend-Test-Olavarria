@@ -1,4 +1,17 @@
+aiohttp==3.7.3
+APScheduler==3.7.0
 asgiref==3.3.1
+async-timeout==3.0.1
+attrs==20.3.0
+chardet==3.0.4
 Django==3.1.5
+django-apscheduler==0.5.2
+idna==3.1
+multidict==5.1.0
 pytz==2020.5
+six==1.15.0
+slack-sdk==3.2.1
 sqlparse==0.4.1
+typing-extensions==3.7.4.3
+tzlocal==2.1
+yarl==1.6.3
