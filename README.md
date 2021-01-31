@@ -1,7 +1,7 @@
 # Cornershop's Backend Test
 
 
-## Descripción e Instrucciones
+## Indicaciones Generales:
 
 
 Sobre Requerimientos:
@@ -46,4 +46,83 @@ Probar la implementación:
 python manage.py runserver --noreload
 ``` 
 
-Felipe Olavarría Riquelme
+
+
+## Estructura
+
+MainProject:
+
+- BackendTest:
+  - settings.py
+    - AUTH_USER_MODEL = 'mealmngmt.User', modelo de usuario usado para el autentificador.
+    - LOGIN_REDIRECT_URL = '/mealmngmt/create-menu', url donde se redirige luego de iniciar sesión.
+    - SLACK_TOKEN: Token para la app de SLACK.
+    - SCHEDULER_CONFIG: Configuración del scheduler.
+    - OPEN_HOUR = 7, hora donde trabaja el schedueler y se pueden recibir pedidos de menus.
+    - CLOSE_HOUR = 11, hora donde se deja de invocar al scheduler y se dejan de recibir pedidos de menus.
+  - urls.py: ruteo principal, contiene el homeview, login y logout. Se delega el resto de urls dentro de mealmgnt.
+- mealmgntmt:
+   - apps.py
+      - ```python
+         def ready(self):
+         ```
+          Invoca al scheduler al comenzar la aplicación.
+  - models.py
+    - ```python
+         class User(AbstractUser):
+             pass
+        ```
+        Solo hereda la clase abstracta de django, usada para la autentificación.
+    - ```python
+         class MealManager(models.Model):
+        ```
+        Usuario que maneja los menus y tiene acceso a los requests.
+    - ```python
+         class Menu(models.Model):
+        ```
+    - ```python
+         class MenuRequest(models.Model):
+        ```
+  - forms.py
+    - ```python
+         class CreateMenuModelForm(forms.ModelForm):
+        ```
+    - ```python
+         class CreateMenuRequestModelForm(forms.ModelForm):
+        ```
+    - ```python
+         class SchedulerForm(forms.Form):
+        ```
+  - views.py
+    - ```python
+         class HomeView(generic.TemplateView):
+        ```
+        Simplemente muestra el navbar de la app. No requiere autentificación.
+    - ```python
+         class MenuCreateView(generic.CreateView):
+        ```
+        Crea los menus diarios. Requiere autentificación. Usa el modelform CreateMenuModelForm. Se redifine get_context_data(self, **kwargs) para poblar la vista con la información que crea. Esto es dos enlces para compartir el menú o modificarlo, identificados con su UUID recien creada. detaillink. El método form_valid(self,form) se sobreescribre para añadir datos de sesión en el formulario, actualizar la vista y programar el trabajo de slack para recordar.
+    - ```python
+         class MenuListView(generic.ListView):
+        ```
+        Enumera los menus creados a la fecha. Requiere autentificación.
+    - ```python
+         class MenuDetailView(generic.FormView):
+        ```
+        Muestra los detalles asociados al menú de un UUID junto con todos los pedidos asociados a el. Requiere autentificación. get_context_data(self, **kwargs) recupera la info del menú con su pk=uuid y todas los pedidos. form_valid(self,form) usa el form SchedulerForm, reemplazando el task existente con los campos nuevos.
+    - ```python
+         class MenuRequestView(generic.CreateView):
+        ```
+        Muestra el menú y un formulario para hacer el pedido. No requiere autentificación.get_context_data(self, **kwargs) consigue la información del menú y determina si se esta permitido solicitar el pedido o no (fijandose en los valores de OPEN_HOUR y CLOSE_HOUR en settings.py). form_valid(self,form) se sobreescribe para añadir el valor del menu de la sesión y añadir un mensaje de confirmación de pedido.
+  - urls.py: ruteo dentro de mealmngnt, aquí se definen que vistas requieren autentificación y cuales no. create-menu, menu-list y menu-details requieren autentificación, menu no lo requiere.
+  - scheduler
+    - scheduler.py
+      - ```python
+           class MenuRequestView(generic.CreateView):
+          ```
+  - templates/mealmngmt: templates html usados por las vistas de la aplicación mealmngmt. 
+
+- templates: templates generales usados de base/navbar y login.
+        
+    
+        
