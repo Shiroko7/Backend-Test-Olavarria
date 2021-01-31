@@ -1,18 +1,34 @@
 from django import forms
 from django.conf import settings
+from .models import Menu, MenuRequest
 
 
-class CreateMenuForm(forms.Form):
-    message = forms.CharField(widget=forms.Textarea)
-    date = forms.DateField(
-        widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+class CreateMenuModelForm(forms.ModelForm):
+    class Meta:
+        model = Menu
+        fields = {
+            'message',
+            'date'
+        }
+        widgets = {
+            'message': forms.Textarea,
+            'date': forms.widgets.DateInput(attrs={'type': 'date'})
+        }
 
 
-class RequestMenuForm(forms.Form):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-    option = forms.CharField(widget=forms.Textarea)
-    customization = forms.CharField(widget=forms.Textarea)
+class CreateMenuRequestModelForm(forms.ModelForm):
+    class Meta:
+        model = MenuRequest
+        fields = {
+            'first_name',
+            'last_name',
+            'option',
+            'customization'
+        }
+        widgets = {
+            'message': forms.Textarea,
+            'date': forms.Textarea
+        }
 
 
 class SchedulerForm(forms.Form):

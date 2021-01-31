@@ -3,7 +3,7 @@
 <div>
 	<h1>Menu del Día {{date}}</h1>
 
-	{{ message }}
+	{{ menu }}
 
 	<form method="post" action"." >
       <fieldset {{enabled}}>
@@ -13,11 +13,8 @@
       </fieldset>
     </form>
 
-	{% if post  %}
-
-      {{msg}}    
+    {{msg}}    
       
-    {% endif %}
 </div>
 
 {% endblock content %}

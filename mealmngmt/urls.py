@@ -1,11 +1,13 @@
 from django.urls import path
-from .views import create_menu, menu_list, menu_details, view_menu
+from django.contrib.auth.decorators import login_required
+from .views import MenuCreateView, MenuListView,  MenuRequestView, MenuDetailView
 
 app_name = "mealmngmt"
 
 urlpatterns = [
-    path('create-menu/', create_menu, name='create-menu'),
-    path('menu-list/', menu_list, name='menu-list'),
-    path('menu-details/<uuid>/', menu_details, name='menu-details'),
-    path('menu/<uuid>/', view_menu, name='menu')
+    path('create-menu/', login_required(MenuCreateView.as_view()), name='create-menu'),
+    path('menu-list/', login_required(MenuListView.as_view()), name='menu-list'),
+    path('menu-details/<pk>/',
+         login_required(MenuDetailView.as_view()), name='menu-details'),
+    path('menu/<pk>/', MenuRequestView.as_view(), name='menu')
 ]

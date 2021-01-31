@@ -20,6 +20,9 @@ class Menu(models.Model):
     date = models.DateField()
     mealmanager = models.ForeignKey(MealManager, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.id)
+
 
 class MenuRequest(models.Model):
     first_name = models.CharField(max_length=50)
@@ -27,5 +30,3 @@ class MenuRequest(models.Model):
     option = models.CharField(max_length=40)
     customization = models.CharField(max_length=140)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
-
-# xoxb-1683708563844-1690268597857-XS6OkIBmsqCkQ3qeWAQKvabr

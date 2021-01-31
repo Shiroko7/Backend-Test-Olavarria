@@ -14,11 +14,15 @@
     {% if post  %}
 
       {{msg}}    
-      Un recordatrio ha sido programado, para ver los pedidos y editar los recordatorios de slack dirigirse a:
-      <a href = "{% url 'mealmngmt:menu-details' uuid %}">{{detaillink}}</a>
+      <p>
+        Un recordatrio ha sido programado, para ver los pedidos y editar los recordatorios de slack dirigirse a:
+        <a href = "{% url 'mealmngmt:menu-details' uuid %}">{{detaillink}}</a>
+      </p>
 
-      Link del menu único para los usuarios:
-      <a href = "{% url 'mealmngmt:menu' uuid %}">{{sharelink}}</a>
+      <p>
+        Link del menu único para los usuarios:
+        <a href = "{% url 'mealmngmt:menu' uuid %}">{{sharelink}}</a>
+      </p>
       
     {% endif %}
 </div>

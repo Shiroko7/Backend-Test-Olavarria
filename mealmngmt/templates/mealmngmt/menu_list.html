@@ -2,9 +2,8 @@
 
 <div>
 	<h1>Lista de Menus {{date}}</h1>
-
 	<ul>
-		{% for menu in menus %}
+		{% for menu in object_list %}
 		<li>{{menu.message}} {{menu.date}}</li>
 		<a href="{% url 'mealmngmt:menu-details' menu.id %}">Detalles</a>
 		{% endfor %}
